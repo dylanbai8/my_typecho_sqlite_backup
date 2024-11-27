@@ -41,7 +41,7 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         # 提交更改
         git add ${{ env.FILE_PATH }}
-        git commit -m "定时备份"
+        git commit -m "定时备份" --allow-empty
         git push
 
     - name: 推送成功通知
