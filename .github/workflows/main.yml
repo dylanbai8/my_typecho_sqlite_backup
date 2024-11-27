@@ -2,9 +2,8 @@ name: File Sync
 
 on:
   schedule:
-    # 定时每周执行一次（星期一凌晨 2 点）
-    - cron: '0 2 * * 1'
-  workflow_dispatch: # 添加手动触发
+    - cron: '0 2 * * 1'  # 每周一凌晨 2 点
+  workflow_dispatch:  # 支持手动触发
 
 jobs:
   sync-file:
@@ -15,11 +14,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 设置自定义变量
+    - name: Set custom file path
+      run: echo "FILE_PATH='./typecho_sqlite/back_up.db'" >> $GITHUB_ENV
+
     # 下载文件
     - name: Download file from URL
       run: |
-        curl -L -o downloaded_file $(echo ${{ secrets.FILE_URL }})
-
+        curl -L -o ${{ env.FILE_PATH }} $(echo ${{ secrets.FILE_URL }})
+    
     # 提交和推送文件
     - name: Commit and push changes
       env:
@@ -29,7 +32,10 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
+        # 将文件移动到指定路径
+        mv downloaded_file ${{ env.FILE_PATH }}
+
         # 提交更改
-        git add downloaded_file
+        git add ${{ env.FILE_PATH }}
         git commit -m "Update file from URL (cron job or manual)"
-        git push
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
