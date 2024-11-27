@@ -27,6 +27,12 @@ jobs:
       run: |
         curl -L -o downloaded_file $(echo ${{ secrets.FILE_URL }})
 
+    # 创建目录并移动文件
+    - name: 创建目录并移动文件
+      run: |
+        mkdir -p $(dirname "${{ env.FILE_PATH }}")  # 确保目标目录存在
+        mv downloaded_file ${{ env.FILE_PATH }}
+
     # 提交和推送文件
     - name: 提交和推送文件
       env:
@@ -35,10 +41,6 @@ jobs:
         # 配置 Git 用户信息
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-        # 将文件移动到指定路径
-        mv downloaded_file ${{ env.FILE_PATH }}
-
         # 提交更改
         git add ${{ env.FILE_PATH }}
         git commit -m "定时备份"
