@@ -1,4 +1,8 @@
-name: File Sync
+# 定时备份url远程文件 到GitHub仓库
+# 给予GitHub仓库写入权限 https://github.com/dylanbai8/my_typecho_sqlite_backup/settings/actions
+# 配置 FILE_URL 变量 https://github.com/dylanbai8/my_typecho_sqlite_backup/settings/secrets/actions
+
+name: 定时备份
 
 on:
   schedule:
@@ -11,31 +15,31 @@ jobs:
 
     steps:
     # 检出代码
-    - name: Checkout repository
+    - name: 检出代码
       uses: actions/checkout@v3
 
-    # 设置自定义变量
-    - name: Set custom file path
+    ####### 设置自定义变量 设置保存到仓库的路径 ########
+    - name: 设置保存到仓库的路径
       run: echo "FILE_PATH='./typecho_sqlite/back_up.db'" >> $GITHUB_ENV
 
     # 下载文件
-    - name: Download file from URL
+    - name: 下载文件
       run: |
         curl -L -o ${{ env.FILE_PATH }} $(echo ${{ secrets.FILE_URL }})
-    
+
     # 提交和推送文件
-    - name: Commit and push changes
+    - name: 提交和推送文件
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # 配置 Git 用户信息
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
+
         # 将文件移动到指定路径
         mv downloaded_file ${{ env.FILE_PATH }}
 
         # 提交更改
         git add ${{ env.FILE_PATH }}
-        git commit -m "Update file from URL (cron job or manual)"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+        git commit -m "定时备份"
+        git push
