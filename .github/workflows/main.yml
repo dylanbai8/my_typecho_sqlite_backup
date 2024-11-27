@@ -1,9 +1,10 @@
-name: Weekly File Sync
+name: File Sync
 
 on:
   schedule:
     # 定时每周执行一次（星期一凌晨 2 点）
     - cron: '0 2 * * 1'
+  workflow_dispatch: # 添加手动触发
 
 jobs:
   sync-file:
@@ -24,10 +25,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # 添加文件到仓库
+        # 配置 Git 用户信息
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        mv downloaded_file path/to/destination/filename  # 根据需求调整路径
-        git add path/to/destination/filename
-        git commit -m "Update file from URL (cron job)"
+        
+        # 将文件保存到仓库根目录
+        mv downloaded_file ./ # 如果需要指定文件名，可改为：mv downloaded_file ./new_filename
+        
+        # 提交更改
+        git add downloaded_file
+        git commit -m "Update file from URL (cron job or manual)"
         git push
