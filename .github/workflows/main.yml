@@ -1,0 +1,33 @@
+name: Weekly File Sync
+
+on:
+  schedule:
+    # 定时每周执行一次（星期一凌晨 2 点）
+    - cron: '0 2 * * 1'
+
+jobs:
+  sync-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 检出代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 下载文件
+    - name: Download file from URL
+      run: |
+        curl -L -o downloaded_file $(echo ${{ secrets.FILE_URL }})
+
+    # 提交和推送文件
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # 添加文件到仓库
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        mv downloaded_file path/to/destination/filename  # 根据需求调整路径
+        git add path/to/destination/filename
+        git commit -m "Update file from URL (cron job)"
+        git push
