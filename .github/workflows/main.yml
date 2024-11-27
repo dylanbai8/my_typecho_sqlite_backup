@@ -14,26 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 检出代码
     - name: 检出代码
       uses: actions/checkout@v3
 
-    ####### 设置自定义变量 设置保存到仓库的路径 ########
-    - name: 设置保存到仓库的路径
-      run: echo "FILE_PATH='./typecho_sqlite/back_up.db'" >> $GITHUB_ENV
+    - name: XXXXX 设置保存到仓库的路径 XXXXX
+      run: |
+        echo "DIRs_PATH='./typecho_sqlite/'" >> $GITHUB_ENV
+        echo "FILE_PATH='./typecho_sqlite/back_up.db'" >> $GITHUB_ENV
 
-    # 下载文件
     - name: 下载文件
       run: |
         curl -L -o downloaded_file $(echo ${{ secrets.FILE_URL }})
 
-    # 创建目录并移动文件
     - name: 创建目录并移动文件
       run: |
-        mkdir -p $(dirname "${{ env.FILE_PATH }}")  # 确保目标目录存在
+        mkdir -p ${{ env.DIRs_PATH }}
         mv downloaded_file ${{ env.FILE_PATH }}
 
-    # 提交和推送文件
     - name: 提交和推送文件
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
