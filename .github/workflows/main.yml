@@ -30,7 +30,7 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
         # 将文件保存到仓库根目录
-        mv downloaded_file ./ # 如果需要指定文件名，可改为：mv downloaded_file ./new_filename
+        mv downloaded_file ./666 # 如果需要指定文件名，可改为：mv downloaded_file ./new_filename
         
         # 提交更改
         git add downloaded_file
