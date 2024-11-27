@@ -25,7 +25,7 @@ jobs:
     # 下载文件
     - name: 下载文件
       run: |
-        curl -L -o ${{ env.FILE_PATH }} $(echo ${{ secrets.FILE_URL }})
+        curl -L -o downloaded_file $(echo ${{ secrets.FILE_URL }})
 
     # 提交和推送文件
     - name: 提交和推送文件
