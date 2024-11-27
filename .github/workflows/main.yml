@@ -29,9 +29,6 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # 将文件保存到仓库根目录
-        mv downloaded_file ./666 # 如果需要指定文件名，可改为：mv downloaded_file ./new_filename
-        
         # 提交更改
         git add downloaded_file
         git commit -m "Update file from URL (cron job or manual)"
