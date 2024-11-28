@@ -1,7 +1,7 @@
 # 定时备份url远程文件 到GitHub仓库
 # 给予GitHub仓库写入权限 https://github.com/dylanbai8/my_typecho_sqlite_backup/settings/actions
 # 配置 FILE_URL 变量 https://github.com/dylanbai8/my_typecho_sqlite_backup/settings/secrets/actions
-# 配置 HOOK_URL 变量 (用于推送成功通知)
+# 配置 HOOK_URL 变量 (用于post推送hook变量 成功通知)
 
 name: 定时备份
 
@@ -47,6 +47,5 @@ jobs:
     - name: 推送成功通知
       run: |
         curl -X POST \
-          -H "Content-Type: application/json" \
-          -d '{"hook":"GitHub Actions execution completed"}' \
-          https://abc.987665.xyz/usr/telegram_bot/tg_author_bot.php
+          -d "hook=[定时任务]数据库备份成功！" \
+          $(echo ${{ secrets.HOOK_URL }})
